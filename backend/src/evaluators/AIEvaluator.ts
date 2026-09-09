@@ -1,9 +1,10 @@
-import {GoogleGenerativeAI} from "@google/generative-ai";
+// src/evaluators/AIEvaluator.ts
+import { GoogleGenerativeAI } from "@google/generative-ai";
 import { RUBRIC } from "../rubric";
-import type {Evaluator} from "./Evaluator";
-import type {Problem,Submission,CriterionResult} from "../types";
+import type { Evaluator } from "./Evaluator";
+import type { Problem, Submission, CriterionResult } from "../types";
 
-const genAI=new GoogleGenerativeAI(ProcessingInstruction.env.GEMINI_API_KEY);
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
 
 export class AIEvaluator implements Evaluator {
   async evaluate(problem: Problem, submission: Submission) {

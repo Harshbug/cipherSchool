@@ -8,4 +8,4 @@ const problemSchema=new Schema({
 
 },{timestamps:true})
 
-export const ProblemMode=model("problem",problemSchema);
+export const ProblemModel=model("problem",problemSchema);
