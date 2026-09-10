@@ -1,0 +1,59 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    border-color: #44475A;
+  }
+
+  html {
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+
+  body {
+    background-color: #282A36;
+    color: #F8F8F2;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+@layer components {
+  .card {
+    @apply bg-dracula-selection/60 border border-dracula-selection rounded-xl shadow-soft;
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-dracula-purple text-dracula-bg font-medium transition-all hover:bg-dracula-purple/90 hover:shadow-soft-lg active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 px-4 py-2 rounded-lg border border-dracula-current-line text-dracula-foreground font-medium transition-all hover:bg-dracula-selection hover:border-dracula-accent/50 active:scale-[0.98];
+  }
+
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 px-3 py-2 rounded-lg text-dracula-foreground/70 font-medium transition-all hover:text-dracula-foreground hover:bg-dracula-selection/60;
+  }
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: #282A36;
+}
+::-webkit-scrollbar-thumb {
+  background: #44475A;
+  border-radius: 5px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #6272A4;
+}
+
+/* Textarea auto-resize feel */
+textarea {
+  resize: vertical;
+}

@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+    <title>LLD Practice</title>
+    <meta property="og:image" content="https://bolt.new/static/og_default.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="https://bolt.new/static/og_default.png" />
+  </head>
+  <body style="margin:0;background:#282A36;color:#F8F8F2;font-family:Inter,system-ui,sans-serif">
+    <div id="root">
+      <p style="padding:2rem;opacity:0.6">Starting app…</p>
+    </div>
+    <script type="module" src="/src/main.tsx"></script>
+    <script>
+      // If the Vite module never mounts, surface a clear hint instead of a white page.
+      window.setTimeout(function () {
+        var root = document.getElementById('root');
+        if (!root || root.querySelector('[data-app-ready], nav, .min-h-screen')) return;
+        if (root.childElementCount > 1) return;
+        root.innerHTML =
+          '<div style="padding:2rem;max-width:40rem;line-height:1.5">' +
+          '<strong style="color:#FF5555">App did not start.</strong>' +
+          '<p style="margin-top:0.75rem;opacity:0.8">Open the Vite URL (not the HTML file): ' +
+          '<code style="color:#8BE9FD">http://127.0.0.1:5173/</code></p>' +
+          '<p style="opacity:0.6">If that still fails, check the browser console for a red error.</p>' +
+          '</div>';
+      }, 4000);
+    </script>
+  </body>
+</html>
