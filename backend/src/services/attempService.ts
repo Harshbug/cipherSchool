@@ -4,7 +4,7 @@ import { SubmissionModel } from "../models/Submission";
 import { EvaluationModel } from "../models/Evaluation";
 import { ProblemModel } from "../models/Problem";
 import { AIEvaluator } from "../evaluators/AIEvaluator";
-
+import { Types } from "mongoose";
 const evaluator = new AIEvaluator();
 
 export async function startAttempt(problemId: string, learnerId: string){
@@ -27,11 +27,11 @@ export async function submitAttempt(attemptId: string, content: string) {
   const evaluation = await EvaluationModel.create({
     attemptId, status: "evaluating",
   });
-
-  attempt.submissionId = submission._id;
-  attempt.evaluationId = evaluation._id;
+  attempt.submissionId = submission._id as Types.ObjectId;
+  attempt.evaluationId = evaluation._id as Types.ObjectId;
   attempt.status = "evaluating";
   await attempt.save();
+   
 
   // Fire evaluation without blocking the response — learner sees
   // "evaluating" status immediately, poll/fetch for the result later.
@@ -55,6 +55,7 @@ async function runEvaluation(attemptId: string, evaluationId: string, submission
     });
     await AttemptModel.findByIdAndUpdate(attemptId, { status: "completed" });
   } catch (err) {
+    console.log("eval error",err);
     await EvaluationModel.findByIdAndUpdate(evaluationId, {
       status: "failed", errorMessage: (err as Error).message,
     });
@@ -62,13 +63,53 @@ async function runEvaluation(attemptId: string, evaluationId: string, submission
   }
 }
 
+function mapHistoryStatus(status: string): "evaluating" | "completed" | "failed" {
+  if (status === "completed" || status === "failed") return status;
+  return "evaluating";
+}
+
 export async function getAttemptHistory(learnerId: string) {
-  return AttemptModel.find({ learnerId }).sort({ createdAt: -1 });
+  const attempts = await AttemptModel.find({ learnerId }).sort({ createdAt: -1 });
+
+  return Promise.all(
+    attempts.map(async (attempt) => {
+      const problem = await ProblemModel.findById(attempt.problemId).select("title");
+      const evaluation = attempt.evaluationId
+        ? await EvaluationModel.findById(attempt.evaluationId)
+        : await EvaluationModel.findOne({ attemptId: attempt._id });
+
+      const overallScore =
+        evaluation?.status === "completed" && evaluation.overallScore != null
+          ? Math.round(evaluation.overallScore * 10)
+          : null;
+      
+      return {
+        id: attempt._id.toString(),
+        problemTitle: problem?.title ?? "Unknown problem",
+        date: (attempt as any).createdAt?.toISOString?.() ?? new Date().toISOString(),
+        status: mapHistoryStatus(attempt.status),
+        score: overallScore,
+        maxScore: 100,
+      };
+    })
+  );
 }
 
 export async function getAttemptDetail(attemptId: string) {
   const attempt = await AttemptModel.findById(attemptId);
-  const submission = attempt?.submissionId ? await SubmissionModel.findById(attempt.submissionId) : null;
-  const evaluation = attempt?.evaluationId ? await EvaluationModel.findById(attempt.evaluationId) : null;
-  return { attempt, submission, evaluation };
+  if (!attempt) {
+    return { attempt: null, submission: null, evaluation: null, problem: null };
+  }
+
+  const [submission, evaluation, problem] = await Promise.all([
+    attempt.submissionId
+      ? SubmissionModel.findById(attempt.submissionId)
+      : SubmissionModel.findOne({ attemptId: attempt._id }),
+    attempt.evaluationId
+      ? EvaluationModel.findById(attempt.evaluationId)
+      : EvaluationModel.findOne({ attemptId: attempt._id }),
+    ProblemModel.findById(attempt.problemId),
+  ]);
+
+  return { attempt, submission, evaluation, problem };
 }

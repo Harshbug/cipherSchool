@@ -1,11 +1,9 @@
 import { ProblemModel } from "../models/Problem";
 
-export async function listProblems() {
-    return ProblemModel.find().select("title statement")
-
+export async function listProblem() {
+    return ProblemModel.find().select("title statement requirements constraints");
 }
 
-export async function getProblems() {
+export async function getProblem(id: string) {
     return ProblemModel.findById(id);
 }
-

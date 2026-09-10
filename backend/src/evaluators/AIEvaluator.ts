@@ -4,12 +4,13 @@ import { RUBRIC } from "../rubric";
 import type { Evaluator } from "./Evaluator";
 import type { Problem, Submission, CriterionResult } from "../types";
 
+
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
 
 export class AIEvaluator implements Evaluator {
   async evaluate(problem: Problem, submission: Submission) {
     const model = genAI.getGenerativeModel({
-      model: "gemini-2.0-flash",
+      model: "gemini-3.5-flash-lite",
       generationConfig: { responseMimeType: "application/json" },
     });
 

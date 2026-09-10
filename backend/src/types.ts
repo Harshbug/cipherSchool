@@ -17,7 +17,7 @@ interface Submission {
 
 //designing rubric constants
 
-type CriterionKey= "requirementUnderstaning"|"responsibilities"|"couplingCohesion"|"abstraction"|"extensibility"|"explanationQuality";
+type CriterionKey= "requirementUnderstanding"|"responsibilities"|"couplingCohesion"|"abstraction"|"extensibility"|"explanationQuality";
 
 interface RubricCriterion {
     key:CriterionKey;
@@ -27,7 +27,7 @@ interface RubricCriterion {
 }
 
 const RUBRIC: RubricCriterion[] = [
-  { key: "requirementUnderstaning", label: "Requirement Understanding", weight: 0.15,
+  { key: "requirementUnderstanding", label: "Requirement Understanding", weight: 0.15,
     description: "Does the design address the stated requirements and constraints?" },
   { key: "responsibilities", label: "Class Responsibilities", weight: 0.2,
     description: "Does each class/interface have a single, clear responsibility?" },
